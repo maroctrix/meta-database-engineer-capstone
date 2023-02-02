@@ -1,5 +1,5 @@
 SELECT
-	c.customer_id AS CustomerID,
+    c.customer_id AS CustomerID,
     c.name AS FullName,
     o.order_id AS OrderID,
     o.total_cost AS Cost,
