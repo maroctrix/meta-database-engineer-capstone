@@ -48,3 +48,11 @@ jupyter notebook
 ```
 
 ### 7. Change the kernel to `.venv`
+
+### 8. Inside the `notebooks` folder create a `.env` file
+
+```bash
+# .env
+USER     = YOUR_MYSQL_USERNAME
+PASSWORD = YOUR_MYSQL_PASSWORD
+```
