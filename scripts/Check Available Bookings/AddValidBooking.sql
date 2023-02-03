@@ -1,37 +1,30 @@
+-- Drop the procedure with the same name if it exists
 DROP PROCEDURE IF EXISTS AddValidBooking;
-DROP FUNCTION IF EXISTS Validate;
-
+-- Change the delimiter to $$
 DELIMITER $$
-
-CREATE FUNCTION Validate(RecordsFound INTEGER, message VARCHAR(255)) RETURNS INTEGER DETERMINISTIC
-BEGIN
-    IF RecordsFound IS NOT NULL OR RecordsFound > 0 THEN
-        SIGNAL SQLSTATE 'ERR0R' SET MESSAGE_TEXT = message;
-    END IF;
-    RETURN RecordsFound;
-END$$
-
-CREATE PROCEDURE AddValidBooking(IN BookingDate DATE, IN TableNumber INT)
+-- Creating the procedure
+CREATE PROCEDURE AddValidBooking(IN BookingDate DATE, IN TableNumber INT, IN CustomerID INT)
 	BEGIN
-		DECLARE `_rollback` BOOL DEFAULT 0;
-		DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET `_rollback` = 1;
+		-- Declare the variable that will hold the count of bookings found
+        DECLARE FoundBooking INT DEFAULT 0;
+        -- Starting the transaction
 		START TRANSACTION;
-        
-        SELECT Validate(COUNT(*), CONCAT("Table ", TableNumber, " is already booked"))
+        -- Check if a booking with the same date and table number exists and hold the count in the variable
+        SELECT COUNT(*) INTO FoundBooking
         FROM bookings
         WHERE date = BookingDate AND table_number = TableNumber;
-        
-		INSERT INTO bookings (date, table_number)
-		VALUES (BookingDate, TableNumber);
-		
-		IF `_rollback` THEN
+        -- Insert the booking
+		INSERT INTO bookings (date, table_number, customer_id)
+		VALUES (BookingDate, TableNumber, CustomerID);
+		-- If a booking with the same date and table number was found then rollup otherwise commit
+		IF FoundBooking <> 0 THEN
 			SELECT CONCAT("Table ", TableNumber, " is already booked - booking cancelled") AS "Booking status";
 			ROLLBACK;
 		ELSE
 			COMMIT;
 		END IF;
     END$$
-    
+-- Change back the delimiter to ;
 DELIMITER ;
-
-CALL AddValidBooking("2022-12-17", 6);
+-- Call the procedure to test it
+CALL AddValidBooking("2022-12-17", 6, 5);
