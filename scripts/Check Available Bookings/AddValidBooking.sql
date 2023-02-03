@@ -8,7 +8,7 @@ CREATE PROCEDURE AddValidBooking(IN BookingDate DATE, IN TableNumber INT, IN Cus
 		-- Declare the variable that will hold the count of bookings found
         DECLARE FoundBooking INT DEFAULT 0;
         -- Starting the transaction
-		START TRANSACTION;
+	START TRANSACTION;
         -- Check if a booking with the same date and table number exists and hold the count in the variable
         SELECT COUNT(*) INTO FoundBooking
         FROM bookings
