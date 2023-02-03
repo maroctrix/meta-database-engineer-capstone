@@ -12,3 +12,39 @@ Engineering databases using [MySQL](https://dev.mysql.com/downloads/) as part of
         <img src="images/meta-database-cert.png" width="30%" height="30%" />
     </a>
 </p>
+
+### Running the `MySQLClient` notebook in a virtual environment
+
+## 1. Install `pipenv`
+
+```bash
+pip install pipenv
+```
+
+## 2. Inside the `notebooks` folder create an empty `.venv` folder
+
+## 3. Install the dependencies
+
+```bash
+pipenv install
+```
+
+## 4. Activate the environment
+
+```bash
+pipenv shell
+```
+
+## 5. Add `.venv` to the kernel list
+
+```bash
+py -m ipykernel install --user --name=.venv
+```
+
+## 6. Run `Jupyter`
+
+```bash
+jupyter notebook
+```
+
+## 7. Change the kernel to `.venv`
